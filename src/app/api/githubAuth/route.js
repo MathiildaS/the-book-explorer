@@ -1,3 +1,8 @@
+/**
+ * Using the client ID and redirect URL to redirect the user to the authentication page of GitHub.
+ * 
+ * @returns {Response} A respone object that redirects user to the authentication page of GitHub.
+ */
 export async function GET() {
   const clientID = process.env.CLIENT_ID;
   const redirectURI = process.env.REDIRECT_URL;
