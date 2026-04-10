@@ -25,7 +25,7 @@ export async function GET(req) {
  * Exchanges code from GitHub for access token and then fetches user name and email with the access token.
  *
  * @param {string} githubCode - the code from GitHub to exchange.
- * @returns {Response} the response object with the access token or error message.
+ * @returns {object} the access token with user data or error message.
  */
 async function getAccessToken(githubCode) {
   try {
