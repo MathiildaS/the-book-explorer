@@ -37,11 +37,20 @@ async function getAuthUser(githubCode) {
 
   const apiUser = await fetchAPIUser(githubUserData);
 
+  await setUserCookie(apiUser);
+
   return apiUser;
 }
 
 async function setUserCookie(apiUser) {
-
+  const cookieStorage = await cookies();
+  cookieStorage.set("jwt-token", apiUser.token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+  });
 }
 
 /**
