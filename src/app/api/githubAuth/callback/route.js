@@ -92,10 +92,9 @@ async function fetchUserData(githubAccessToken) {
   const githubEmail = githubUserData.email;
   const githubName = githubUserData.name;
 
-  return {
-    accessToken: githubAccessToken,
-    userData: { email: githubEmail, name: githubName },
-  };
+  const githubUserDetails = {githubEmail, githubName };
+
+  return githubUserDetails;
 }
 
 /**
