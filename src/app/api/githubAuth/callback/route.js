@@ -97,3 +97,30 @@ async function fetchUserData(githubAccessToken) {
     userData: { email: githubEmail, name: githubName },
   };
 }
+
+/**
+ * Fetches user data from the API endpoint.
+ *
+ * @param {object} githubUserDetails - the user details from GitHub including access token, name and email.
+ * @returns {object} the user data from the API.
+ */
+async function fetchAPIUser(githubUserDetails) {
+  const apiUser = await fetch("http://localhost:3000/api/user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(githubUserDetails),
+  });
+
+  const apiUserData = await apiUser.json();
+
+  if (!apiUserData) {
+    const error = new Error("Failed to retrieve user data from API");
+    error.status = 500;
+    throw error;
+  }
+
+  return apiUserData
+}
+
