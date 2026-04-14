@@ -4,6 +4,9 @@
  * @param {Request} req - the request object from github with the code to exchange.
  * @returns {Response} the response object with the access token or error message.
  */
+
+import { cookies } from "next/headers";
+
 export async function GET(req) {
   try {
     const githubCode = req.nextUrl.searchParams.get("code");
@@ -28,13 +31,17 @@ export async function GET(req) {
  * @returns {object} the access token with user data or error message.
  */
 async function getAuthUser(githubCode) {
-    const githubAccessToken = await fetchAccessToken(githubCode);
+  const githubAccessToken = await fetchAccessToken(githubCode);
 
-    const githubUserData = await fetchUserData(githubAccessToken);
+  const githubUserData = await fetchUserData(githubAccessToken);
 
-    const apiUser = await fetchAPIUser(githubUserData);
+  const apiUser = await fetchAPIUser(githubUserData);
 
-    return apiUser;
+  return apiUser;
+}
+
+async function setUserCookie(apiUser) {
+
 }
 
 /**
@@ -92,7 +99,7 @@ async function fetchUserData(githubAccessToken) {
   const githubEmail = githubUserData.email;
   const githubName = githubUserData.name;
 
-  const githubUserDetails = {githubEmail, githubName };
+  const githubUserDetails = { githubEmail, githubName };
 
   return githubUserDetails;
 }
@@ -109,7 +116,24 @@ async function fetchAPIUser(githubUserDetails) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(githubUserDetails),
+    body: JSON.stringify({
+      query: `
+    mutation GitHubLogin($githubEmail: String!, $githubName: String!) {
+      githubLogin(githubEmail: $githubEmail, githubName: $githubName) {
+        token
+        user {
+          id
+          email
+          createdAt
+        }
+      }
+    }
+  `,
+      variables: {
+        githubEmail: githubUserDetails.githubEmail,
+        githubName: githubUserDetails.githubName,
+      },
+    }),
   });
 
   const apiUserData = await apiUser.json();
@@ -120,6 +144,5 @@ async function fetchAPIUser(githubUserDetails) {
     throw error;
   }
 
-  return apiUserData
+  return apiUserData;
 }
-
