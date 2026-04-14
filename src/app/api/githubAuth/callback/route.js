@@ -1,5 +1,5 @@
 /**
- * Collects the code from the query paramters and calls getAccessToken to exchange it for the access token from GitHub.
+ * Collects the code from the query paramters and calls getAuthUser to exchange it for the access token from GitHub.
  *
  * @param {Request} req - the request object from github with the code to exchange.
  * @returns {Response} the response object with the access token or error message.
@@ -14,7 +14,7 @@ export async function GET(req) {
       throw error;
     }
 
-    const response = await getAccessToken(githubCode);
+    const response = await getAuthUser(githubCode);
     return Response.json(response);
   } catch (error) {
     return Response.json({ error: error.message }, { status: error.status });
@@ -22,57 +22,78 @@ export async function GET(req) {
 }
 
 /**
- * Exchanges code from GitHub for access token and then fetches user name and email with the access token.
+ * Exchanges code from GitHub for access token and then fetches user name and email with the access token from GitHub before fetching user data from the API.
  *
  * @param {string} githubCode - the code from GitHub to exchange.
  * @returns {object} the access token with user data or error message.
  */
-async function getAccessToken(githubCode) {
-  try {
-    const result = await fetch("https://github.com/login/oauth/access_token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        code: githubCode,
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-      }),
-    });
+async function getAuthUser(githubCode) {
+    const githubAccessToken = await fetchAccessToken(githubCode);
 
-    const githubResponse = await result.json();
-    const githubAccessToken = githubResponse.access_token;
+    const githubUserData = await fetchUserData(githubAccessToken);
 
-    if (!githubAccessToken) {
-      const error = new Error("Failed to retrieve access token");
-      error.status = 500;
-      throw error;
-    }
+    const apiUser = await fetchAPIUser(githubUserData);
 
-    const githubUserResult = await fetch("https://api.github.com/user", {
-      headers: {
-        Authorization: `token ${githubAccessToken}`,
-      },
-    });
+    return apiUser;
+}
 
-    const githubUserData = await githubUserResult.json();
+/**
+ * Exchanges code from GitHub for access token by POSTing to endpoint of GitHub with client id and client secret.
+ *
+ * @param {string} githubCode - the code from GitHub to exchange.
+ * @returns {string} the access token.
+ */
+async function fetchAccessToken(githubCode) {
+  const result = await fetch("https://github.com/login/oauth/access_token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      code: githubCode,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+    }),
+  });
 
-    if (!githubUserData) {
-      const error = new Error("Failed to retrieve user data");
-      error.status = 500;
-      throw error;
-    }
+  const githubResponse = await result.json();
+  const githubAccessToken = githubResponse.access_token;
 
-    const githubEmail = githubUserData.email;
-    const githubName = githubUserData.name;
-
-    return {
-      accessToken: githubAccessToken,
-      userData: { email: githubEmail, name: githubName },
-    };
-  } catch (error) {
-    return Response.json({ error: error.message }, { status: error.status });
+  if (!githubAccessToken) {
+    const error = new Error("Failed to retrieve access token");
+    error.status = 500;
+    throw error;
   }
+  return githubAccessToken;
+}
+
+/**
+ * Fetches user data from GitHub user endpoint by using the access token from GitHub to authenticate the request.
+ *
+ * @param {string} githubAccessToken - the access token from GitHub to fetch user from GitHub user endpoint.
+ * @returns {object} the user details including email, name and access token from GitHub.
+ */
+async function fetchUserData(githubAccessToken) {
+  const githubUserResult = await fetch("https://api.github.com/user", {
+    headers: {
+      Authorization: `token ${githubAccessToken}`,
+    },
+  });
+
+  const githubUserData = await githubUserResult.json();
+
+  if (!githubUserData) {
+    const error = new Error("Failed to retrieve user data");
+    error.status = 500;
+    throw error;
+  }
+
+  const githubEmail = githubUserData.email;
+  const githubName = githubUserData.name;
+
+  return {
+    accessToken: githubAccessToken,
+    userData: { email: githubEmail, name: githubName },
+  };
 }
