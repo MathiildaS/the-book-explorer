@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
-  const {books, pageInfo} = await getBooks();
+  const { books } = await getBooks();
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -93,9 +93,7 @@ categories {
   const allBooksData = await allBooks.json();
 
   if (!allBooksData) {
-    const error = new Error("Failed to retrieve books data from API");
-    error.status = 500;
-    throw error;
+    throw new Error("Failed to retrieve books data from API");
   }
 
   return allBooksData.data.books;
