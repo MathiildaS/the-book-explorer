@@ -152,3 +152,9 @@ async function fetchAPIUser(githubUserDetails) {
 
   return apiUserData;
 }
+
+function errorHandling(req, message) {
+  const url = new URL("/error", req.nextUrl);
+  url.searchParams.set("message", message);
+  return NextResponse.redirect(url)
+}
