@@ -21,7 +21,7 @@ export async function GET(req) {
     await getAuthUser(githubCode);
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: error.status });
+    return errorHandling(req, error.message);
   }
 }
 
