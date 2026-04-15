@@ -24,5 +24,49 @@ async function getCookie() {
 async function getBooks() {
   const jwtToken = await getCookie();
 
+  const allBooks = await fetch("http://localhost:4000/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    body: JSON.stringify({
+      query: `
+      query ($booksPerPage: Int, $currentBookIndex: Int){
+      books(
+        booksPerPage: $booksPerPage
+        currentBookIndex: $currentBookIndex
+      ) {
+    pageInfo {
+      totalBooks
+      booksPerPage
+      currentBookIndex
+      nextPage
+      prevPage
+    }
+    books {
+      id
+      title
+      price
+      publishYear
+    }
+    }
+    }
+  `,
+      variables: {
+        booksPerPage: 15,
+        currentBookIndex: 0,
+      },
+    }),
+  });
 
+  const allBooksData = await allBooks.json();
+
+  if (!allBooksData) {
+    const error = new Error("Failed to retrieve books data from API");
+    error.status = 500;
+    throw error;
+  }
+
+  return allBooksData.data.books;
 }
