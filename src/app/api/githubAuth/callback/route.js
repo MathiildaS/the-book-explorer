@@ -6,6 +6,7 @@
  */
 
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
@@ -17,10 +18,10 @@ export async function GET(req) {
       throw error;
     }
 
-    const response = await getAuthUser(githubCode);
-    return Response.json(response);
+    await getAuthUser(githubCode);
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   } catch (error) {
-    return Response.json({ error: error.message }, { status: error.status });
+    return NextResponse.json({ error: error.message }, { status: error.status });
   }
 }
 
@@ -38,8 +39,6 @@ async function getAuthUser(githubCode) {
   const apiUser = await fetchAPIUser(githubUserData);
 
   await setUserCookie(apiUser);
-
-  return apiUser;
 }
 
 async function setUserCookie(apiUser) {
