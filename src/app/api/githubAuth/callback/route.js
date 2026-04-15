@@ -33,17 +33,15 @@ export async function GET(req) {
  */
 async function getAuthUser(githubCode) {
   const githubAccessToken = await fetchAccessToken(githubCode);
-
   const githubUserData = await fetchUserData(githubAccessToken);
-
   const apiUser = await fetchAPIUser(githubUserData);
-
   await setUserCookie(apiUser);
 }
 
 async function setUserCookie(apiUser) {
   const cookieStorage = await cookies();
-  cookieStorage.set("jwt-token", apiUser.token, {
+
+  cookieStorage.set("jwt-token", apiUser.data.githubLogin.token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: "lax",
