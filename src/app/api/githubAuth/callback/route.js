@@ -153,6 +153,12 @@ async function fetchAPIUser(githubUserDetails) {
   return apiUserData;
 }
 
+/**
+ * Handles errors by redirecting to a custom page with specific error messages. 
+ *
+ * @param {object} req - the req-object from request
+ * @param {string} message - the error message. 
+ */
 function errorHandling(req, message) {
   const url = new URL("/error", req.nextUrl);
   url.searchParams.set("message", message);
