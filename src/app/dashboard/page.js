@@ -22,5 +22,7 @@ async function getCookie() {
 }
 
 async function getBooks() {
-  
+  const jwtToken = await getCookie();
+
+
 }
