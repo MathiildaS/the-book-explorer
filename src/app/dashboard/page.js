@@ -8,7 +8,7 @@ export default async function Dashboard() {
     return redirect("/api/user");
   }
 
-  const books = allBooksResult.data.books;
+  const { books } = allBooksResult.data;
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -52,7 +52,8 @@ async function getCookie() {
 }
 
 async function getBooks() {
-  const jwtToken = await getCookie();
+  try { 
+    const jwtToken = await getCookie();
 
   const allBooks = await fetch("http://localhost:4000/graphql", {
     method: "POST",
@@ -105,7 +106,7 @@ categories {
 
   const allBooksData = await allBooks.json();
 
-  if (allBooks.status === 401 || allBooksData.errors.message === "Unauthorized") {
+  if (allBooks.status === 401 || allBooksData.errors?.[0]?.message === "Unauthorized") {
     const authError = {
       authError: true,
     };
@@ -123,4 +124,11 @@ categories {
   };
 
   return bookObject;
+} catch (error) {
+      const authError = {
+      authError: true,
+    };
+
+    return authError;
+}
 }
