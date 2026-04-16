@@ -1,7 +1,18 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import TopAuthorChart from "../../components/topAuthorChart.js"
 
+/**
+ * 
+ * @returns 
+ */
 export default async function Dashboard() {
+const testdata = [
+  { id: 1,name: "Author 1", amountOfBooks: 5 },
+  { id: 2, name: "Author 2", amountOfBooks: 3 },
+  { id: 3, name: "Author 3", amountOfBooks: 8 },
+];
+
   const allBooksResult = await getBooks();
 
   if (allBooksResult.authError) {
@@ -14,6 +25,8 @@ export default async function Dashboard() {
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <h1>Dashboard</h1>
+<TopAuthorChart authors={testdata} />
+
         <p>List of Books: {books.length}</p>
         <ul>
           {books.map((book) => (
@@ -39,6 +52,10 @@ export default async function Dashboard() {
   );
 }
 
+/**
+ * 
+ * @returns 
+ */
 async function getCookie() {
   const cookieStorage = await cookies();
   const jwtToken = cookieStorage.get("jwt-token");
@@ -51,6 +68,10 @@ async function getCookie() {
   return jwtToken.value;
 }
 
+/**
+ * 
+ * @returns 
+ */
 async function getBooks() {
   try { 
     const jwtToken = await getCookie();
