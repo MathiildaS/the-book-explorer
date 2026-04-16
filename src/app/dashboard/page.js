@@ -2,7 +2,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
-  const { books } = await getBooks();
+  const allBooksResult = await getBooks();
+
+  if (allBooksResult.authError) {
+    return redirect("/api/user");
+  }
+
+  const books = allBooksResult.data.books;
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -18,8 +24,13 @@ export default async function Dashboard() {
               <p>Publish Month: {book.publishMonth}</p>
               <p>Publish Year: {book.publishYear}</p>
               <p>Publisher: {book.publisher.name}</p>
-              <p>Authors: {book.authors.map((author) => author.name).join(", ")}</p>
-              <p>Categories: {book.categories.map((category) => category.name).join(", ")}</p>
+              <p>
+                Authors: {book.authors.map((author) => author.name).join(", ")}
+              </p>
+              <p>
+                Categories:{" "}
+                {book.categories.map((category) => category.name).join(", ")}
+              </p>
             </li>
           ))}
         </ul>
@@ -33,7 +44,9 @@ async function getCookie() {
   const jwtToken = cookieStorage.get("jwt-token");
 
   if (!jwtToken) {
-    redirect("/");
+    throw new Error(
+      "You are not authorized, please log in to view the dashboard.",
+    );
   }
   return jwtToken.value;
 }
@@ -92,9 +105,22 @@ categories {
 
   const allBooksData = await allBooks.json();
 
+  if (allBooks.status === 401 || allBooksData.errors.message === "Unauthorized") {
+    const authError = {
+      authError: true,
+    };
+
+    return authError;
+  }
+
   if (!allBooksData) {
     throw new Error("Failed to retrieve books data from API");
   }
 
-  return allBooksData.data.books;
+  const bookObject = {
+    authError: false,
+    data: allBooksData.data.books,
+  };
+
+  return bookObject;
 }
