@@ -1,16 +1,16 @@
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+
 /**
  * Collects the code from the query paramters and calls getAuthUser to exchange it for the access token from GitHub.
  *
  * @param {Request} req - the request object from github with the code to exchange.
  * @returns {Response} the response object with the access token or error message.
  */
-
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-
 export async function GET(req) {
   try {
-    const githubCode = req.nextUrl.searchParams.get("code");
+    const { searchParams } = new URL(req.url);
+    const githubCode = searchParams.get("code");
 
     if (!githubCode) {
       const error = new Error("No GitHub code provided");
@@ -19,7 +19,7 @@ export async function GET(req) {
     }
 
     await getAuthUser(githubCode);
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   } catch (error) {
     return errorHandling(req, error.message);
   }
@@ -160,7 +160,7 @@ async function fetchAPIUser(githubUserDetails) {
  * @param {string} message - the error message. 
  */
 function errorHandling(req, message) {
-  const url = new URL("/error", req.nextUrl);
+  const url = new URL("/error", req.url);
   url.searchParams.set("message", message);
   return NextResponse.redirect(url)
 }
