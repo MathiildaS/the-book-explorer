@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
-import { getCookie } from "../dashboardData/jwtCookie.js";
+import { cookies } from "next/headers";
 
 export default async function Home() {
-  const jwtToken = await getCookie();
+  const cookieStorage = await cookies();
+  const jwtToken = cookieStorage.get("jwt-token");
 
   if (jwtToken) {
     redirect("/dashboard");
