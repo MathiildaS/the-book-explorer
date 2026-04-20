@@ -1,4 +1,5 @@
-import { cookies } from "next/headers";
+import { getBooks } from "../../dashboardData/getBooks.js";
+import { getTopAuthors } from "../../dashboardData/getAuthorToplist.js";
 import { redirect } from "next/navigation";
 import TopAuthorChart from "../../clientComponents/topAuthorChart.js";
 
@@ -7,136 +8,65 @@ import TopAuthorChart from "../../clientComponents/topAuthorChart.js";
  * @returns
  */
 export default async function Dashboard() {
-  const testdata = [
-    { id: 1, name: "Author 1", amountOfBooks: 5 },
-    { id: 2, name: "Author 2", amountOfBooks: 3 },
-    { id: 3, name: "Author 3", amountOfBooks: 8 },
-  ];
+  const allBooksResult = await getBooks(5);
+  const authorToplistResult = await getTopAuthors(20);
 
-  const allBooksResult = await getBooks();
-
-  if (allBooksResult.authError) {
+  if (allBooksResult.authError || authorToplistResult.authError) {
     return redirect("/api/user");
   }
 
   const { books } = allBooksResult.data;
+  const authors = authorToplistResult.data;
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <h1>Dashboard</h1>
-        <TopAuthorChart authors={testdata} />
+        <TopAuthorChart authors={authors} />
 
-        <p>List of Books: {books.length}</p>
-        <ul>
+        <p className="mt-4">List of Books: {books.length}</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {books.map((book) => (
-            <li key={book.id}>
-              <h2>Title: {book.title}</h2>
-              <p>Description: {book.description}</p>
-              <p>Price: ${book.price}</p>
-              <p>Publish Month: {book.publishMonth}</p>
-              <p>Publish Year: {book.publishYear}</p>
-              <p>Publisher: {book.publisher.name}</p>
-              <p>
-                Authors: {book.authors.map((author) => author.name).join(", ")}
+            <div
+              key={book.id}
+              className="bg-white dark:bg-zinc-900 rounded-lg shadow-md p-5 hover:shadow-lg transition"
+            >
+              <h2 className="text-lg font-semibold mb-2">{book.title}</h2>
+
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                {book.description}
               </p>
-              <p>
-                Categories:{" "}
-                {book.categories.map((category) => category.name).join(", ")}
-              </p>
-            </li>
+
+              <div className="text-sm space-y-1">
+                <p>
+                  <span className="font-medium">Price:</span> ${book.price}
+                </p>
+                <p>
+                  <span className="font-medium">Published:</span>{" "}
+                  {book.publishMonth}/{book.publishYear}
+                </p>
+                <p>
+                  <span className="font-medium">Publisher:</span>{" "}
+                  {book.publisher.name}
+                </p>
+              </div>
+
+              <div className="mt-3 text-sm">
+                <p>
+                  <span className="font-medium">Authors:</span>{" "}
+                  {book.authors.map((a) => a.name).join(", ")}
+                </p>
+
+                <p>
+                  <span className="font-medium">Categories:</span>{" "}
+                  {book.categories.map((c) => c.name).join(", ")}
+                </p>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       </main>
     </div>
   );
-}
-
-/**
- *
- * @returns
- */
-async function getBooks() {
-  try {
-    const jwtToken = await getCookie();
-
-    const allBooks = await fetch("http://localhost:4000/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwtToken}`,
-      },
-      body: JSON.stringify({
-        query: `
-      query ($booksPerPage: Int, $currentBookIndex: Int){
-      books(
-        booksPerPage: $booksPerPage
-        currentBookIndex: $currentBookIndex
-      ) {
-    pageInfo {
-      totalBooks
-      booksPerPage
-      currentBookIndex
-      nextPage
-      prevPage
-    }
-    books {
-      id
-      title
-      description
-      price
-      publishMonth
-      publishYear
-publisher {
-  name
-}
-
-authors {
-  name
-}
-
-categories {
-  name
-}
-    }
-    }
-    }
-  `,
-        variables: {
-          booksPerPage: 15,
-          currentBookIndex: 0,
-        },
-      }),
-    });
-
-    const allBooksData = await allBooks.json();
-
-    if (
-      allBooks.status === 401 ||
-      allBooksData.errors?.[0]?.message === "Unauthorized"
-    ) {
-      const authError = {
-        authError: true,
-      };
-
-      return authError;
-    }
-
-    if (!allBooksData) {
-      throw new Error("Failed to retrieve books data from API");
-    }
-
-    const bookObject = {
-      authError: false,
-      data: allBooksData.data.books,
-    };
-
-    return bookObject;
-  } catch (error) {
-    const authError = {
-      authError: true,
-    };
-
-    return authError;
-  }
 }
