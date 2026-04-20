@@ -2,20 +2,25 @@ import { getBooks } from "../../dashboardData/getBooks.js";
 import { getTopAuthors } from "../../dashboardData/getAuthorToplist.js";
 import { redirect } from "next/navigation";
 import TopAuthorChart from "../../clientComponents/topAuthorChart.js";
+import Link from "next/link.js";
 
 /**
  *
  * @returns
  */
-export default async function Dashboard() {
-  const allBooksResult = await getBooks(5);
+export default async function Dashboard({ searchParams }) {
+  const searchParameters = await searchParams;
+  const bookLimit = Number(searchParameters.bookLimit) || 12;
+  const pageIndex = Number(searchParameters.pageIndex) || 0;
+
+  const allBooksResult = await getBooks(bookLimit, pageIndex);
   const authorToplistResult = await getTopAuthors(20);
 
   if (allBooksResult.authError || authorToplistResult.authError) {
     return redirect("/api/user");
   }
 
-  const { books } = allBooksResult.data;
+  const { books, pageInfo } = allBooksResult.data;
   const authors = authorToplistResult.data;
 
   return (
@@ -65,6 +70,23 @@ export default async function Dashboard() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div>
+          {pageInfo.prevPage && (
+            <Link
+              href={`/dashboard?bookLimit=${bookLimit}&pageIndex=${pageInfo.currentBookIndex - pageInfo.booksPerPage}`}
+            >
+              Previous Page
+            </Link>
+          )}
+          {pageInfo.nextPage && (
+            <Link
+              href={`/dashboard?bookLimit=${bookLimit}&pageIndex=${pageInfo.currentBookIndex + pageInfo.booksPerPage}`}
+            >
+              Next Page
+            </Link>
+          )}
         </div>
       </main>
     </div>

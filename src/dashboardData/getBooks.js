@@ -4,7 +4,7 @@ import { getCookie } from "./jwtCookie.js";
  *
  * @returns
  */
-export async function getBooks(numberOfBooks) {
+export async function getBooks(numberOfBooks, bookIndex) {
   try {
     const jwtToken = await getCookie();
 
@@ -52,7 +52,7 @@ categories {
   `,
         variables: {
           booksPerPage: numberOfBooks,
-          currentBookIndex: 0,
+          currentBookIndex: bookIndex,
         },
       }),
     });
