@@ -117,7 +117,7 @@ async function fetchUserData(githubAccessToken) {
  * @returns {object} the user data from the API.
  */
 async function fetchAPIUser(githubUserDetails) {
-  const apiUser = await fetch("http://localhost:4000/graphql", {
+  const apiUser = await fetch(process.env.NEXT_PUBLIC_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
