@@ -1,17 +1,17 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import TopAuthorChart from "../../components/topAuthorChart.js"
+import TopAuthorChart from "../../clientComponents/topAuthorChart.js";
 
 /**
- * 
- * @returns 
+ *
+ * @returns
  */
 export default async function Dashboard() {
-const testdata = [
-  { id: 1,name: "Author 1", amountOfBooks: 5 },
-  { id: 2, name: "Author 2", amountOfBooks: 3 },
-  { id: 3, name: "Author 3", amountOfBooks: 8 },
-];
+  const testdata = [
+    { id: 1, name: "Author 1", amountOfBooks: 5 },
+    { id: 2, name: "Author 2", amountOfBooks: 3 },
+    { id: 3, name: "Author 3", amountOfBooks: 8 },
+  ];
 
   const allBooksResult = await getBooks();
 
@@ -25,7 +25,7 @@ const testdata = [
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <h1>Dashboard</h1>
-<TopAuthorChart authors={testdata} />
+        <TopAuthorChart authors={testdata} />
 
         <p>List of Books: {books.length}</p>
         <ul>
@@ -53,37 +53,21 @@ const testdata = [
 }
 
 /**
- * 
- * @returns 
- */
-async function getCookie() {
-  const cookieStorage = await cookies();
-  const jwtToken = cookieStorage.get("jwt-token");
-
-  if (!jwtToken) {
-    throw new Error(
-      "You are not authorized, please log in to view the dashboard.",
-    );
-  }
-  return jwtToken.value;
-}
-
-/**
- * 
- * @returns 
+ *
+ * @returns
  */
 async function getBooks() {
-  try { 
+  try {
     const jwtToken = await getCookie();
 
-  const allBooks = await fetch("http://localhost:4000/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwtToken}`,
-    },
-    body: JSON.stringify({
-      query: `
+    const allBooks = await fetch("http://localhost:4000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify({
+        query: `
       query ($booksPerPage: Int, $currentBookIndex: Int){
       books(
         booksPerPage: $booksPerPage
@@ -118,38 +102,41 @@ categories {
     }
     }
   `,
-      variables: {
-        booksPerPage: 15,
-        currentBookIndex: 0,
-      },
-    }),
-  });
+        variables: {
+          booksPerPage: 15,
+          currentBookIndex: 0,
+        },
+      }),
+    });
 
-  const allBooksData = await allBooks.json();
+    const allBooksData = await allBooks.json();
 
-  if (allBooks.status === 401 || allBooksData.errors?.[0]?.message === "Unauthorized") {
+    if (
+      allBooks.status === 401 ||
+      allBooksData.errors?.[0]?.message === "Unauthorized"
+    ) {
+      const authError = {
+        authError: true,
+      };
+
+      return authError;
+    }
+
+    if (!allBooksData) {
+      throw new Error("Failed to retrieve books data from API");
+    }
+
+    const bookObject = {
+      authError: false,
+      data: allBooksData.data.books,
+    };
+
+    return bookObject;
+  } catch (error) {
     const authError = {
       authError: true,
     };
 
     return authError;
   }
-
-  if (!allBooksData) {
-    throw new Error("Failed to retrieve books data from API");
-  }
-
-  const bookObject = {
-    authError: false,
-    data: allBooksData.data.books,
-  };
-
-  return bookObject;
-} catch (error) {
-      const authError = {
-      authError: true,
-    };
-
-    return authError;
-}
 }
