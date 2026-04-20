@@ -2,7 +2,7 @@
  *
  * @returns
  */
-async function getCookie() {
+export async function getCookie() {
   const cookieStorage = await cookies();
   const jwtToken = cookieStorage.get("jwt-token");
 
