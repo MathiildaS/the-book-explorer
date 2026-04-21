@@ -1,8 +1,8 @@
 import { getCookie } from "./jwtCookie";
 
 export async function getAllCategories() {
-    try {
- const jwtToken = await getCookie();
+  try {
+    const jwtToken = await getCookie();
 
     const getCategories = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
@@ -20,12 +20,16 @@ export async function getAllCategories() {
       }
       `,
       }),
-    })
+    });
 
-    const categoriesData = await getCategories.json()
+    const categoriesData = await getCategories.json();
 
-    if (!categoriesData || !categoriesData.data || !categoriesData.data.categories) {
-        throw new Error("Failed to retrieve all categories")
+    if (
+      !categoriesData ||
+      !categoriesData.data ||
+      !categoriesData.data.categories
+    ) {
+      throw new Error("Failed to retrieve all categories");
     }
 
     if (
@@ -48,9 +52,9 @@ export async function getAllCategories() {
   } catch (error) {
     const getCategoriesError = {
       authError: false,
-      fetchError: true
+      fetchError: true,
     };
 
     return getCategoriesError;
-    }
+  }
 }
