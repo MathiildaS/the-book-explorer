@@ -21,7 +21,36 @@ export async function getAllCategories() {
       `,
       }),
     })
-    } catch (error) {
 
+    const categoriesData = await getCategories.json()
+
+    if (!categoriesData || !categoriesData.data || !categoriesData.data.categories) {
+        throw new Error("Failed to retrieve all categories")
+    }
+
+    if (
+      categoriesData.status === 401 ||
+      categoriesData.errors?.[0]?.message === "Unauthorized"
+    ) {
+      const authError = {
+        authError: true,
+      };
+
+      return authError;
+    }
+
+    const categoriesObject = {
+      authError: false,
+      data: categoriesData.data.categories,
+    };
+
+    return categoriesObject;
+  } catch (error) {
+    const getCategoriesError = {
+      authError: false,
+      fetchError: true
+    };
+
+    return getCategoriesError;
     }
 }
