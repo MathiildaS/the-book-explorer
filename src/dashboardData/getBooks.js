@@ -4,7 +4,7 @@ import { getCookie } from "./jwtCookie.js";
  *
  * @returns
  */
-export async function getBooks(numberOfBooks, bookIndex) {
+export async function getBooks(numberOfBooks, bookIndex, filter) {
   try {
     const jwtToken = await getCookie();
 
@@ -16,10 +16,19 @@ export async function getBooks(numberOfBooks, bookIndex) {
       },
       body: JSON.stringify({
         query: `
-      query ($booksPerPage: Int, $currentBookIndex: Int){
+      query ($booksPerPage: Int, 
+      $currentBookIndex: Int, 
+      $title: String,
+            $authorName: String,
+            $categoryName: String,
+            $publisherName: String){
       books(
         booksPerPage: $booksPerPage
         currentBookIndex: $currentBookIndex
+              title: $title
+              authorName: $authorName
+              categoryName: $categoryName
+              publisherName: $publisherName
       ) {
     pageInfo {
       totalBooks
@@ -53,11 +62,24 @@ categories {
         variables: {
           booksPerPage: numberOfBooks,
           currentBookIndex: bookIndex,
+          title: filter.title,
+          authorName: filter.author,
+          categoryName: filter.category,
+          publisherName: filter.publisher,
         },
       }),
     });
 
     const allBooksData = await allBooks.json();
+
+    if (allBooksData.errors) {
+  console.log("GraphQL errors:", allBooksData.errors);
+
+  return {
+    authError: false,
+    fetchError: true,
+  };
+}
 
     if (
       allBooks.status === 401 ||
@@ -81,10 +103,11 @@ categories {
 
     return bookObject;
   } catch (error) {
-    const authError = {
-      authError: true,
+    const getBooksError = {
+      authError: false,
+      fetchError: true
     };
 
-    return authError;
+    return getBooksError;
   }
 }
