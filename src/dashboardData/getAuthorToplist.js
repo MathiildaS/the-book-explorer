@@ -50,10 +50,11 @@ export async function getTopAuthors(limit) {
 
     return authorsObject;
   } catch (error) {
-    const authError = {
-      authError: true,
+    const getAuthorsError = {
+      authError: false,
+      fetchError: true
     };
 
-    return authError;
+    return getAuthorsError;
   }
 }
