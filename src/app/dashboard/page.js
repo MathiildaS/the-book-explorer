@@ -8,6 +8,7 @@ import { getFiltering } from "../../dashboardData/bookFilter.js";
 import BookObject from "../../clientComponents/bookList.js";
 import { getPagination } from "../../dashboardData/booksPagination.js";
 import { getAllCategories } from "../../dashboardData/bookCategories.js";
+import { getBooksOfAuthor } from "../../dashboardData/authorBooks.js";
 
 /**
  *
@@ -16,6 +17,7 @@ import { getAllCategories } from "../../dashboardData/bookCategories.js";
 export default async function Dashboard({ searchParams }) {
   const searchParameters = await searchParams;
 
+  const authorId = searchParameters.authorId;
   const { bookLimit, pageIndex, filter, formFilter } =
     getFiltering(searchParameters);
 
@@ -23,10 +25,19 @@ export default async function Dashboard({ searchParams }) {
   const authorToplistResult = await getTopAuthors(20);
   const allCategoriesResult = await getAllCategories();
 
+  const authorBookPageData = {
+    authorId: authorId,
+    numberOfBooks: bookLimit,
+    bookIndex: pageIndex
+  }
+
+  const booksOfAuthorResult = await getBooksOfAuthor(authorBookPageData)
+
   if (
     allBooksResult.authError ||
     authorToplistResult.authError ||
-    allCategoriesResult.authError
+    allCategoriesResult.authError ||
+    booksOfAuthorResult.authError
   ) {
     return redirect("/api/user");
   }
@@ -41,6 +52,10 @@ export default async function Dashboard({ searchParams }) {
 
   if (allCategoriesResult.fetchError || !allCategoriesResult.data) {
     throw new Error("Could not fetch categories");
+  }
+
+  if (booksOfAuthorResult.fetchError || !booksOfAuthorResult.data) {
+    throw new Error("Could not fetch books of author");
   }
 
   const { books, pageInfo } = allBooksResult.data;
