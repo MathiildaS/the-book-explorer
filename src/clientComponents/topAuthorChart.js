@@ -23,6 +23,9 @@ ChartJS.register(
 );
 
 export default function TopAuthorChart({ authors }) {
+  const router = useRouter()
+  const searchParameters = useSearchParams();
+
   const authorData = {
     labels: authors.map((author) => author.name),
     datasets: [
@@ -36,6 +39,15 @@ export default function TopAuthorChart({ authors }) {
 
   const chartOptions = {
     responsive: true,
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const clickedElementIndex = elements[0].index;
+      const clickedAuthor = authors[clickedElementIndex];
+      const authorId = clickedAuthor.id;
+      
+      console.log("Clicked on author with id:", authorId)
+    }
+  },
     scales: {
       y: {
         beginAtZero: true,
