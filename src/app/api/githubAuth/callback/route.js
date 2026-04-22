@@ -43,7 +43,7 @@ async function setUserCookie(apiUser) {
 
   cookieStorage.set("jwt-token", apiUser.data.githubLogin.token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -123,18 +123,18 @@ async function fetchAPIUser(githubUserDetails) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query: `
-    mutation GitHubLogin($githubEmail: String!, $githubName: String!) {
-      githubLogin(githubEmail: $githubEmail, githubName: $githubName) {
-        token
-        user {
-          id
-          email
-          createdAt
+      query: /* GraphQL */ `
+        mutation GitHubLogin($githubEmail: String!, $githubName: String!) {
+          githubLogin(githubEmail: $githubEmail, githubName: $githubName) {
+            token
+            user {
+              id
+              email
+              createdAt
+            }
+          }
         }
-      }
-    }
-  `,
+      `,
       variables: {
         githubEmail: githubUserDetails.githubEmail,
         githubName: githubUserDetails.githubName,
@@ -154,13 +154,13 @@ async function fetchAPIUser(githubUserDetails) {
 }
 
 /**
- * Handles errors by redirecting to a custom page with specific error messages. 
+ * Handles errors by redirecting to a custom page with specific error messages.
  *
  * @param {object} req - the req-object from request
- * @param {string} message - the error message. 
+ * @param {string} message - the error message.
  */
 function errorHandling(req, message) {
   const url = new URL("/error", req.url);
   url.searchParams.set("message", message);
-  return NextResponse.redirect(url)
+  return NextResponse.redirect(url);
 }

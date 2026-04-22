@@ -1,4 +1,4 @@
-export function getFiltering(searchParameters) {  
+export function getFiltering(searchParameters) {
   const bookLimit = Number(searchParameters.bookLimit) || 12;
   const pageIndex = Number(searchParameters.pageIndex) || 0;
   const bookTitleFilter = searchParameters.bookTitle || "";
@@ -14,11 +14,11 @@ export function getFiltering(searchParameters) {
   };
 
   const formFilter = {
-  bookTitle: bookTitleFilter,
-  authorName: authorNameFilter,
-  categoryName: categoryNameFilter,
-  publisherName: publisherNameFilter,
-  limit: bookLimit,
-};
+    bookTitle: bookTitleFilter,
+    authorName: authorNameFilter,
+    categoryName: categoryNameFilter,
+    publisherName: publisherNameFilter,
+    limit: bookLimit,
+  };
   return { bookLimit, pageIndex, filter, formFilter };
 }

@@ -11,14 +11,14 @@ export async function getAllCategories() {
         Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
-        query: `
-        query {
-        categories {
-        id
-        name
-      }
-      }
-      `,
+        query: /* GraphQL */ `
+          query {
+            categories {
+              id
+              name
+            }
+          }
+        `,
       }),
     });
 

@@ -15,50 +15,52 @@ export async function getBooks(numberOfBooks, bookIndex, filter) {
         Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
-        query: `
-      query ($booksPerPage: Int, 
-      $currentBookIndex: Int, 
-      $title: String,
-            $authorName: String,
-            $categoryName: String,
-            $publisherName: String){
-      books(
-        booksPerPage: $booksPerPage
-        currentBookIndex: $currentBookIndex
+        query: /* GraphQL */ `
+          query (
+            $booksPerPage: Int
+            $currentBookIndex: Int
+            $title: String
+            $authorName: String
+            $categoryName: String
+            $publisherName: String
+          ) {
+            books(
+              booksPerPage: $booksPerPage
+              currentBookIndex: $currentBookIndex
               title: $title
               authorName: $authorName
               categoryName: $categoryName
               publisherName: $publisherName
-      ) {
-    pageInfo {
-      totalBooks
-      booksPerPage
-      currentBookIndex
-      nextPage
-      prevPage
-    }
-    books {
-      id
-      title
-      description
-      price
-      publishMonth
-      publishYear
-publisher {
-  name
-}
+            ) {
+              pageInfo {
+                totalBooks
+                booksPerPage
+                currentBookIndex
+                nextPage
+                prevPage
+              }
+              books {
+                id
+                title
+                description
+                price
+                publishMonth
+                publishYear
+                publisher {
+                  name
+                }
 
-authors {
-  name
-}
+                authors {
+                  name
+                }
 
-categories {
-  name
-}
-    }
-    }
-    }
-  `,
+                categories {
+                  name
+                }
+              }
+            }
+          }
+        `,
         variables: {
           booksPerPage: numberOfBooks,
           currentBookIndex: bookIndex,
@@ -73,13 +75,13 @@ categories {
     const allBooksData = await allBooks.json();
 
     if (allBooksData.errors) {
-  console.log("GraphQL errors:", allBooksData.errors);
+      console.log("GraphQL errors:", allBooksData.errors);
 
-  return {
-    authError: false,
-    fetchError: true,
-  };
-}
+      return {
+        authError: false,
+        fetchError: true,
+      };
+    }
 
     if (
       allBooks.status === 401 ||
@@ -105,7 +107,7 @@ categories {
   } catch (error) {
     const getBooksError = {
       authError: false,
-      fetchError: true
+      fetchError: true,
     };
 
     return getBooksError;

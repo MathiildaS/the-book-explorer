@@ -11,15 +11,15 @@ export async function getTopAuthors(limit) {
         Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
-        query: `
-                query ($limit: Int) {
-                authorToplist(limit: $limit) {
-                id
-                name
-                amountOfBooks
-                }
-                }
-                `,
+        query: /* GraphQL */ `
+          query ($limit: Int) {
+            authorToplist(limit: $limit) {
+              id
+              name
+              amountOfBooks
+            }
+          }
+        `,
         variables: {
           limit,
         },
@@ -52,7 +52,7 @@ export async function getTopAuthors(limit) {
   } catch (error) {
     const getAuthorsError = {
       authError: false,
-      fetchError: true
+      fetchError: true,
     };
 
     return getAuthorsError;
