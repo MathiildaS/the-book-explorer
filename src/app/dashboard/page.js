@@ -9,6 +9,7 @@ import BookObject from "../../clientComponents/bookList.js";
 import { getPagination } from "../../dashboardData/booksPagination.js";
 import { getAllCategories } from "../../dashboardData/bookCategories.js";
 import { getBooksOfAuthor } from "../../dashboardData/authorBooks.js";
+import AuthorBooksList from "../../clientComponents/authorBooks.js";
 
 /**
  *
@@ -28,10 +29,10 @@ export default async function Dashboard({ searchParams }) {
   const authorBookPageData = {
     authorId: authorId,
     numberOfBooks: bookLimit,
-    bookIndex: pageIndex
-  }
+    bookIndex: pageIndex,
+  };
 
-  const booksOfAuthorResult = await getBooksOfAuthor(authorBookPageData)
+  const booksOfAuthorResult = await getBooksOfAuthor(authorBookPageData);
 
   if (
     allBooksResult.authError ||
@@ -61,6 +62,7 @@ export default async function Dashboard({ searchParams }) {
   const { books, pageInfo } = allBooksResult.data;
   const authors = authorToplistResult.data;
   const categories = allCategoriesResult.data;
+  const booksOfAuthor = booksOfAuthorResult.data.books;
 
   const { prevPage, nextPage } = getPagination(pageInfo, formFilter);
 
@@ -70,7 +72,9 @@ export default async function Dashboard({ searchParams }) {
         <h1>Dashboard</h1>
         <TopAuthorChart authors={authors} />
 
-        <FilteringForm filter={formFilter} categories={categories}/>
+        {authorId && <AuthorBooksList books={booksOfAuthor} />}
+
+        <FilteringForm filter={formFilter} categories={categories} />
 
         <p className="mt-4">List of Books: {books.length}</p>
 
