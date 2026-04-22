@@ -46,6 +46,10 @@ export default function TopAuthorChart({ authors }) {
       const authorId = clickedAuthor.id;
       
       console.log("Clicked on author with id:", authorId)
+
+      const currentSearchParams = new URLSearchParams(searchParameters.toString());
+      currentSearchParams.set("authorId", authorId);
+      router.push(`/dashboard?${currentSearchParams.toString()}`);
     }
   },
     scales: {
