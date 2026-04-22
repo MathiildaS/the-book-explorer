@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
