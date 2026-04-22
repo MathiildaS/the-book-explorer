@@ -67,7 +67,7 @@ export async function getBooksOfAuthor(authorBookPageData) {
     }
 
     if (
-      authorBooksData.status === 401 ||
+      getAuthorBooks.status === 401 ||
       authorBooksData.errors?.[0]?.message === "Unauthorized"
     ) {
       const authError = {

@@ -33,7 +33,7 @@ export async function getTopAuthors(limit) {
     }
 
     if (
-      authorsData.status === 401 ||
+      getAuthors.status === 401 ||
       authorsData.errors?.[0]?.message === "Unauthorized"
     ) {
       const authError = {

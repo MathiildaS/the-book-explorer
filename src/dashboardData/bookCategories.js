@@ -33,7 +33,7 @@ export async function getAllCategories() {
     }
 
     if (
-      categoriesData.status === 401 ||
+      getCategories.status === 401 ||
       categoriesData.errors?.[0]?.message === "Unauthorized"
     ) {
       const authError = {
