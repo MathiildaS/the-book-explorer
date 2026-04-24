@@ -9,7 +9,8 @@ import BookObject from "../../clientComponents/bookList.js";
 import { getPagination } from "../../dashboardData/booksPagination.js";
 import { getAllCategories } from "../../dashboardData/bookCategories.js";
 import { getBooksOfAuthor } from "../../dashboardData/authorBooks.js";
-import AuthorBooksList from "../../clientComponents/authorBooks.js";
+import AuthorBooksList from "../../clientComponents/authorBookList.js";
+import { getAuthorBooksPagination } from "../../dashboardData/authorBooksPagination.js";
 
 /**
  *
@@ -19,6 +20,7 @@ export default async function Dashboard({ searchParams }) {
   const searchParameters = await searchParams;
 
   const authorId = searchParameters.authorId;
+
   const { bookLimit, pageIndex, filter, formFilter } =
     getFiltering(searchParameters);
 
@@ -26,19 +28,10 @@ export default async function Dashboard({ searchParams }) {
   const authorToplistResult = await getTopAuthors(20);
   const allCategoriesResult = await getAllCategories();
 
-  const authorBookPageData = {
-    authorId: authorId,
-    numberOfBooks: bookLimit,
-    bookIndex: pageIndex,
-  };
-
-  const booksOfAuthorResult = await getBooksOfAuthor(authorBookPageData);
-
   if (
     allBooksResult.authError ||
     authorToplistResult.authError ||
-    allCategoriesResult.authError ||
-    booksOfAuthorResult.authError
+    allCategoriesResult.authError
   ) {
     return redirect("/api/user");
   }
@@ -55,14 +48,41 @@ export default async function Dashboard({ searchParams }) {
     throw new Error("Could not fetch categories");
   }
 
-  if (booksOfAuthorResult.fetchError || !booksOfAuthorResult.data) {
-    throw new Error("Could not fetch books of author");
-  }
-
   const { books, pageInfo } = allBooksResult.data;
   const authors = authorToplistResult.data;
   const categories = allCategoriesResult.data;
-  const booksOfAuthor = booksOfAuthorResult.data.books;
+
+  let authorData = {
+    books: [],
+    pageInfo: null,
+    pagination: { prevPage: null, nextPage: null },
+  };
+
+  if (authorId) {
+    const authorBookPage = Number(searchParameters.authorBookPage) || 0;
+
+    const authorBookPageData = {
+      authorId,
+      numberOfBooks: 8,
+      bookIndex: authorBookPage,
+    };
+
+    const result = await getBooksOfAuthor(authorBookPageData);
+
+    if (result?.authError) return redirect("/api/user");
+
+    if (result?.fetchError || !result?.data) {
+      throw new Error("Could not fetch books of author");
+    }
+
+    const pageInfo = result.data.pageInfo;
+
+    authorData = {
+      books: result.data.books || [],
+      pageInfo,
+      pagination: getAuthorBooksPagination(pageInfo, searchParameters),
+    };
+  }
 
   const { prevPage, nextPage } = getPagination(pageInfo, formFilter);
 
@@ -72,7 +92,24 @@ export default async function Dashboard({ searchParams }) {
         <h1>Dashboard</h1>
         <TopAuthorChart authors={authors} />
 
-        {authorId && <AuthorBooksList books={booksOfAuthor} />}
+        {authorId && (
+          <>
+            <AuthorBooksList books={authorData.books} />
+
+            {authorData.pageInfo && (
+              <div>
+                {authorData.pageInfo.prevPage && (
+                  <Link href={authorData.pagination.prevPage}>
+                    Previous Page
+                  </Link>
+                )}
+                {authorData.pageInfo.nextPage && (
+                  <Link href={authorData.pagination.nextPage}>Next Page</Link>
+                )}
+              </div>
+            )}
+          </>
+        )}
 
         <FilteringForm filter={formFilter} categories={categories} />
 

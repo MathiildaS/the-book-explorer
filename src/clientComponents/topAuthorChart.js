@@ -49,6 +49,7 @@ export default function TopAuthorChart({ authors }) {
 
       const currentSearchParams = new URLSearchParams(searchParameters.toString());
       currentSearchParams.set("authorId", authorId);
+      currentSearchParams.set("authorBookPage", "0");
       router.push(`/dashboard?${currentSearchParams.toString()}`);
     }
   },
