@@ -1,7 +1,7 @@
 import { getBooks } from "../../dashboardData/books.js";
 import { getTopAuthors } from "../../dashboardData/authorToplist.js";
 import { redirect } from "next/navigation";
-import TopAuthorChart from "../../clientComponents/topAuthorChart.js";
+import TopAuthorChart from "../../clientComponents/toplistChart.js";
 import Link from "next/link.js";
 import FilteringForm from "../../clientComponents/filteringForm.js";
 import { getFiltering } from "../../dashboardData/bookFilter.js";
@@ -11,6 +11,10 @@ import { getAllCategories } from "../../dashboardData/bookCategories.js";
 import { getBooksOfAuthor } from "../../dashboardData/authorBooks.js";
 import AuthorBooksList from "../../clientComponents/authorBookList.js";
 import { getAuthorBooksPagination } from "../../dashboardData/authorBooksPagination.js";
+import { getTopCategories } from "../../dashboardData/categoriesToplist.js";
+import { getBooksInCategory } from "../../dashboardData/categoryBooks.js";
+import { getCategoryBooksPagination } from "../../dashboardData/categoryBooksPagination.js";
+import CategoryBooksList from "../../clientComponents/categoryBookList.js";
 
 /**
  *
