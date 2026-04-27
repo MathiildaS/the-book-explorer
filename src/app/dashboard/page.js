@@ -113,9 +113,9 @@ return (
 
       <aside className="space-y-6">
         <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-          <h2 className="text-lg font-semibold">Top Authors</h2>
+          <h2 className="text-lg font-semibold">Top 10 Authors and Categories</h2>
           <div className="mt-4">
-            <TopAuthorChart authors={authors} />
+            <TopAuthorChart authors={authors} categories={categories} />
           </div>
         </section>
 
