@@ -25,7 +25,7 @@ export default async function Dashboard({ searchParams }) {
     getFiltering(searchParameters);
 
   const allBooksResult = await getBooks(bookLimit, pageIndex, filter);
-  const authorToplistResult = await getTopAuthors(20);
+  const authorToplistResult = await getTopAuthors(10);
   const allCategoriesResult = await getAllCategories();
 
   if (
@@ -86,46 +86,63 @@ export default async function Dashboard({ searchParams }) {
 
   const { prevPage, nextPage } = getPagination(pageInfo, formFilter);
 
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <h1>Dashboard</h1>
-        <TopAuthorChart authors={authors} />
+return (
+  <div className="min-h-full bg-zinc-50 px-6 py-8 dark:bg-black">
+    <main className="mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_500px]">
 
-        {authorId && (
-          <>
-            <AuthorBooksList books={authorData.books} />
-
-            {authorData.pageInfo && (
-              <div>
-                {authorData.pageInfo.prevPage && (
-                  <Link href={authorData.pagination.prevPage}>
-                    Previous Page
-                  </Link>
-                )}
-                {authorData.pageInfo.nextPage && (
-                  <Link href={authorData.pagination.nextPage}>Next Page</Link>
-                )}
-              </div>
-            )}
-          </>
-        )}
+      <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
+        <h1 className="text-2xl font-bold">Books</h1>
 
         <FilteringForm filter={formFilter} categories={categories} />
 
-        <p className="mt-4">List of Books: {books.length}</p>
+        <p className="mt-4 text-sm text-zinc-500">
+          Showing {books.length} books
+        </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div className="mt-6 grid grid-cols-1 gap-6">
           {books.map((book) => (
             <BookObject key={book.id} book={book} />
           ))}
         </div>
 
-        <div>
-          {pageInfo.prevPage && <Link href={prevPage}>Previous Page</Link>}
+        <div className="mt-6 flex justify-between">
+          {pageInfo.prevPage ? <Link href={prevPage}>Previous Page</Link> : <span />}
           {pageInfo.nextPage && <Link href={nextPage}>Next Page</Link>}
         </div>
-      </main>
-    </div>
-  );
-}
+      </section>
+
+      <aside className="space-y-6">
+        <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
+          <h2 className="text-lg font-semibold">Top Authors</h2>
+          <div className="mt-4">
+            <TopAuthorChart authors={authors} />
+          </div>
+        </section>
+
+        {authorId && (
+          <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
+            <h2 className="text-lg font-semibold">Books by selected author</h2>
+
+            <AuthorBooksList books={authorData.books} />
+
+            {authorData.pageInfo && (
+              <div className="mt-6 flex justify-between">
+                {authorData.pageInfo.prevPage ? (
+                  <Link href={authorData.pagination.prevPage}>
+                    Previous Page
+                  </Link>
+                ) : (
+                  <span />
+                )}
+
+                {authorData.pageInfo.nextPage && (
+                  <Link href={authorData.pagination.nextPage}>Next Page</Link>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+      </aside>
+    </main>
+  </div>
+)};
