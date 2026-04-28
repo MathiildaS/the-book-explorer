@@ -2,45 +2,38 @@ export default function BookObject({ book }) {
   const {
     title,
     description,
-    price,
     publishMonth,
     publishYear,
     publisher,
     authors,
-    categories
+    categories,
   } = book;
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-md p-5 hover:shadow-lg transition">
-      <h2 className="text-lg font-semibold mb-2">{title}</h2>
-
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-        {description}
+    <div
+      className="group cursor-pointer rounded-xl p-5 transition hover:scale-[1.01]"
+      style={{
+        background: "var(--background)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+      }}
+    >
+      <h3 className="mb-2">{title}</h3>
+      <p
+        className="mb-4 text-sm"
+        style={{
+          color: "var(--accent-dark)",
+          maxWidth: "none",
+        }}
+      >
+        <strong>Authors: </strong> {authors.map((a) => a.name).join(", ")}
+        <strong> | Publisher: </strong>
+        {publisher.name} , {publishMonth}/{publishYear}
+        <strong> | Categories:</strong>{" "}
+        {categories.map((c) => c.name).join(", ")}
       </p>
 
-      <div className="text-sm space-y-1">
-        <p>
-          <span className="font-medium">Price:</span> ${price}
-        </p>
-        <p>
-          <span className="font-medium">Published:</span> {publishMonth}/
-          {publishYear}
-        </p>
-        <p>
-          <span className="font-medium">Publisher:</span> {publisher.name}
-        </p>
-      </div>
-
-      <div className="mt-3 text-sm">
-        <p>
-          <span className="font-medium">Authors:</span>{" "}
-          {authors.map((author) => author.name).join(", ")}
-        </p>
-
-        <p>
-          <span className="font-medium">Categories:</span>{" "}
-          {categories.map((category) => category.name).join(", ")}
-        </p>
+      <div className="mt-3 max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-300">
+        <p style={{ maxWidth: "none" }}>{description}</p>
       </div>
     </div>
   );
