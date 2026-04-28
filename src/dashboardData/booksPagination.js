@@ -1,8 +1,14 @@
-export function getPagination(pageInfo, formFilter) {
-  const { bookTitle, authorName, categoryName, publisherName, limit } = formFilter;
+export function getPagination(pageInfo, searchParameters) {
   const { currentBookIndex, booksPerPage } = pageInfo;
 
-  const prevPage = `/dashboard?bookLimit=${limit}&pageIndex=${currentBookIndex - booksPerPage}&bookTitle=${bookTitle}&authorName=${authorName}&categoryName=${categoryName}&publisherName=${publisherName}`;
-  const nextPage = `/dashboard?bookLimit=${limit}&pageIndex=${currentBookIndex + booksPerPage}&bookTitle=${bookTitle}&authorName=${authorName}&categoryName=${categoryName}&publisherName=${publisherName}`;
+  const prevPageParams = new URLSearchParams(searchParameters);
+  prevPageParams.set("bookPage", String(currentBookIndex - booksPerPage));
+
+  const nextPageParams = new URLSearchParams(searchParameters);
+  nextPageParams.set("bookPage", String(currentBookIndex + booksPerPage));
+
+  const prevPage = `/dashboard?${prevPageParams.toString()}`;
+  const nextPage = `/dashboard?${nextPageParams.toString()}`;
+
   return { prevPage, nextPage };
 }

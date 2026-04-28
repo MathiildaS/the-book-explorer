@@ -2,7 +2,6 @@ import { getBooks } from "../../dashboardData/books.js";
 import { getTopAuthors } from "../../dashboardData/authorToplist.js";
 import { redirect } from "next/navigation";
 import ToplistChart from "../../clientComponents/toplistChart.js";
-import Link from "next/link.js";
 import FilteringForm from "../../clientComponents/filteringForm.js";
 import { getFiltering } from "../../dashboardData/bookFilter.js";
 import BookObject from "../../clientComponents/bookList.js";
@@ -26,10 +25,10 @@ export default async function Dashboard({ searchParams }) {
   const authorId = searchParameters.authorId;
   const categoryId = searchParameters.categoryId;
 
-  const { bookLimit, pageIndex, filter, formFilter } =
+  const { bookLimit, bookPage, filter, formFilter } =
     getFiltering(searchParameters);
 
-  const allBooksResult = await getBooks(bookLimit, pageIndex, filter);
+  const allBooksResult = await getBooks(bookLimit, bookPage, filter);
   const authorToplistResult = await getTopAuthors(10);
   const allCategoriesResult = await getAllCategories();
   const categoryToplistResult = await getTopCategories(10);
@@ -136,7 +135,11 @@ export default async function Dashboard({ searchParams }) {
     (category) => String(category.id) === String(categoryId),
   );
 
-  const { prevPage, nextPage } = getPagination(pageInfo, formFilter);
+  const { prevPage, nextPage } = getPagination(pageInfo, searchParameters);
+  const bookPagination = {
+    prevPage,
+    nextPage
+  }
 
   return (
     <div className="min-h-full bg-zinc-50 px-6 py-8 dark:bg-black">
@@ -156,14 +159,7 @@ export default async function Dashboard({ searchParams }) {
             ))}
           </div>
 
-          <div className="mt-6 flex justify-between">
-            {pageInfo.prevPage ? (
-              <Link href={prevPage}>Previous Page</Link>
-            ) : (
-              <span />
-            )}
-            {pageInfo.nextPage && <Link href={nextPage}>Next Page</Link>}
-          </div>
+          <PaginationLinks pageInfo={pageInfo} pagination={bookPagination} />
         </section>
 
         <aside className="space-y-6">

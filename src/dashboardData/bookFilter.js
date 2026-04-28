@@ -1,6 +1,6 @@
 export function getFiltering(searchParameters) {
   const bookLimit = Number(searchParameters.bookLimit) || 12;
-  const pageIndex = Number(searchParameters.pageIndex) || 0;
+  const bookPage = Number(searchParameters.bookPage) || 0;
   const bookTitleFilter = searchParameters.bookTitle || "";
   const authorNameFilter = searchParameters.authorName || "";
   const categoryNameFilter = searchParameters.categoryName || "";
@@ -20,5 +20,5 @@ export function getFiltering(searchParameters) {
     publisherName: publisherNameFilter,
     limit: bookLimit,
   };
-  return { bookLimit, pageIndex, filter, formFilter };
+  return { bookLimit, bookPage, filter, formFilter };
 }
