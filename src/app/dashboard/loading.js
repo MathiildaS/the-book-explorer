@@ -1,7 +1,19 @@
 export default function Loading() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <p>Loading.. Please wait.</p>
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{ background: "var(--background)" }}
+    >
+      <p
+        style={{
+          color: "var(--accent-dark)",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+          fontSize: "12px",
+        }}
+      >
+        Loading... Please wait.
+      </p>
     </div>
   );
 }
