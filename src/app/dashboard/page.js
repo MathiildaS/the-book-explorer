@@ -138,18 +138,21 @@ export default async function Dashboard({ searchParams }) {
   const { prevPage, nextPage } = getPagination(pageInfo, searchParameters);
   const bookPagination = {
     prevPage,
-    nextPage
-  }
+    nextPage,
+  };
 
   return (
-    <div className="min-h-full bg-zinc-50 px-6 py-8 dark:bg-black">
-      <main className="mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_500px]">
-        <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-          <h1 className="text-2xl font-bold">Books</h1>
+    <div
+      className="min-h-full px-6 py-8"
+      style={{ background: "var(--background)" }}
+    >
+      <main className="mx-auto grid w-full max-w-[1500px] grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_550px]">
+        <section className="rounded-xl p-6" style={{ background: "#EDE0D0" }}>
+          <h2>Books</h2>
 
           <FilteringForm filter={formFilter} categories={categories} />
 
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm" style={{ color: "#7C5C3E" }}>
             Showing {books.length} books
           </p>
 
@@ -162,43 +165,44 @@ export default async function Dashboard({ searchParams }) {
           <PaginationLinks pageInfo={pageInfo} pagination={bookPagination} />
         </section>
 
-        <aside className="space-y-6">
-          <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-            <h2 className="text-lg font-semibold">
-              Top 10 Authors and Categories
-            </h2>
-            <div className="mt-4">
-              <ToplistChart authors={authors} categories={topCategories} />
-            </div>
+        <aside>
+          <section className="rounded-xl p-6" style={{ background: "#EDE0D0" }}>
+            <ToplistChart authors={authors} categories={topCategories} />
+
+            {authorId && (
+              <div className="mt-8">
+                <ChartBookList
+                  books={authorData.books}
+                  title={`Books by ${
+                    selectedAuthor ? selectedAuthor.name : "selected author"
+                  }`}
+                />
+
+                <PaginationLinks
+                  pageInfo={authorData.pageInfo}
+                  pagination={authorData.pagination}
+                />
+              </div>
+            )}
+
+            {categoryId && (
+              <div className="mt-8">
+                <ChartBookList
+                  books={categoryData.books}
+                  title={`Books in ${
+                    selectedCategory
+                      ? selectedCategory.name
+                      : "selected category"
+                  }`}
+                />
+
+                <PaginationLinks
+                  pageInfo={categoryData.pageInfo}
+                  pagination={categoryData.pagination}
+                />
+              </div>
+            )}
           </section>
-
-          {authorId && (
-            <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-              <ChartBookList
-                books={authorData.books}
-                title={`Books by ${selectedAuthor ? selectedAuthor.name : "selected author"}`}
-              />
-
-              <PaginationLinks
-                pageInfo={authorData.pageInfo}
-                pagination={authorData.pagination}
-              />
-            </section>
-          )}
-
-          {categoryId && (
-            <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-              <ChartBookList
-                books={categoryData.books}
-                title={`Books in ${selectedCategory ? selectedCategory.name : "selected category"}`}
-              />
-
-              <PaginationLinks
-                pageInfo={categoryData.pageInfo}
-                pagination={categoryData.pagination}
-              />
-            </section>
-          )}
         </aside>
       </main>
     </div>
