@@ -41,8 +41,8 @@ export default async function Home() {
               maxWidth: "520px",
             }}
           >
-            Search for books, explore authors, browse categories and discover
-            what others are reading.
+            Search for books, explore authors, browse top categories and discover
+            what others are reading right now.
           </p>
 
           <div className="mt-10">
