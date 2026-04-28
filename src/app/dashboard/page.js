@@ -14,6 +14,7 @@ import { getTopCategories } from "../../dashboardData/categoriesToplist.js";
 import { getBooksInCategory } from "../../dashboardData/categoryBooks.js";
 import { getCategoryBooksPagination } from "../../dashboardData/categoryBooksPagination.js";
 import ChartBookList from "../../clientComponents/chartBookList.js";
+import PaginationLinks from "../../clientComponents/paginationLinks.js";
 
 /**
  *
@@ -182,21 +183,10 @@ export default async function Dashboard({ searchParams }) {
                 title={`Books by ${selectedAuthor ? selectedAuthor.name : "selected author"}`}
               />
 
-              {authorData.pageInfo && (
-                <div className="mt-6 flex justify-between">
-                  {authorData.pageInfo.prevPage ? (
-                    <Link href={authorData.pagination.prevPage}>
-                      Previous Page
-                    </Link>
-                  ) : (
-                    <span />
-                  )}
-
-                  {authorData.pageInfo.nextPage && (
-                    <Link href={authorData.pagination.nextPage}>Next Page</Link>
-                  )}
-                </div>
-              )}
+              <PaginationLinks
+                pageInfo={authorData.pageInfo}
+                pagination={authorData.pagination}
+              />
             </section>
           )}
 
@@ -207,23 +197,10 @@ export default async function Dashboard({ searchParams }) {
                 title={`Books in ${selectedCategory ? selectedCategory.name : "selected category"}`}
               />
 
-              {categoryData.pageInfo && (
-                <div className="mt-6 flex justify-between">
-                  {categoryData.pageInfo.prevPage ? (
-                    <Link href={categoryData.pagination.prevPage}>
-                      Previous Page
-                    </Link>
-                  ) : (
-                    <span />
-                  )}
-
-                  {categoryData.pageInfo.nextPage && (
-                    <Link href={categoryData.pagination.nextPage}>
-                      Next Page
-                    </Link>
-                  )}
-                </div>
-              )}
+              <PaginationLinks
+                pageInfo={categoryData.pageInfo}
+                pagination={categoryData.pagination}
+              />
             </section>
           )}
         </aside>
