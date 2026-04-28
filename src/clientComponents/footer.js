@@ -3,9 +3,15 @@
  * @returns The footer component.
  */
 export default function Footer() {
-    return (
-        <footer className="w-full h-16 bg-gray-800 text-white flex items-center justify-center">
-            <p className="text-sm font-bold">WT Assignment</p>
-        </footer>
-    )
+  return (
+    <footer
+      className="w-full flex items-center justify-center"
+      style={{
+        background: "#3D2B1F",
+        height: "80px",
+      }}
+    >
+      <p style={{ color: "#F5EFE6" }}>WT Assignment</p>
+    </footer>
+  );
 }

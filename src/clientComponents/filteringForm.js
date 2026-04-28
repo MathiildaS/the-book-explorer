@@ -11,7 +11,6 @@ export default function FilteringForm({ filter, categories }) {
           name="bookTitle"
           placeholder="Book title"
           defaultValue={bookTitle}
-          className="border rounded px-3 py-2"
         />
 
         <input
@@ -19,14 +18,9 @@ export default function FilteringForm({ filter, categories }) {
           name="authorName"
           placeholder="Author name"
           defaultValue={authorName}
-          className="border rounded px-3 py-2"
         />
 
-        <select
-          name="categoryName"
-          defaultValue=""
-          className="border rounded px-3 py-2"
-        >
+        <select name="categoryName" defaultValue="">
           <option value="">Select category</option>
 
           {categories.map((category) => (
@@ -41,30 +35,27 @@ export default function FilteringForm({ filter, categories }) {
           name="publisherName"
           placeholder="Publisher name"
           defaultValue={publisherName}
-          className="border rounded px-3 py-2"
         />
       </div>
 
-      <div className="flex gap-4 items-center">
-        <select
-          name="bookLimit"
-          defaultValue={limit}
-          className="border rounded px-3 py-2"
-        >
-          <option value="6">6</option>
-          <option value="12">12</option>
-          <option value="24">24</option>
-        </select>
+      <div className="flex items-center justify-between">
+        <div>
+          <select name="bookLimit" defaultValue={limit}>
+            <option value="6">6</option>
+            <option value="12">12</option>
+            <option value="24">24</option>
+          </select>
+        </div>
 
-        <input type="hidden" name="pageIndex" value="0" />
+        <div className="flex gap-2 items-center">
+          <input type="hidden" name="bookPage" value="0" />
 
-        <button type="submit" className="bg-black text-white px-4 py-2 rounded">
-          Filter
-        </button>
+          <button type="submit">Filter</button>
 
-        <Link href="/dashboard" className="border px-4 py-2 rounded">
-          Clear
-        </Link>
+          <Link href="/dashboard" className="clear-button">
+            Clear
+          </Link>
+        </div>
       </div>
     </form>
   );
