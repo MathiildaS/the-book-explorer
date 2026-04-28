@@ -27,8 +27,9 @@ h2 {
   font-family: var(--font-playfair);
   font-size: 32px;
   color: #3D2B1F;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 h3 {
@@ -79,9 +80,11 @@ a:hover::after {
 
 button {
   font-family: var(--font-lato), Arial, sans-serif;
-  font-size: 14px;
+  font-size: 10px;
   padding: 8px 16px;
   border-radius: 999px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 
   background: var(--accent);
   color: var(--foreground);
@@ -108,9 +111,11 @@ select {
 
 .clear-button {
   font-family: var(--font-lato), Arial, sans-serif;
-  font-size: 14px;
+  font-size: 10px;
   padding: 8px 16px;
   border-radius: 999px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 
   background: var(--accent);
   color: var(--foreground);
@@ -128,4 +133,10 @@ select {
 
 .clear-button::after {
   display: none;
+}
+
+button.large {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px 16px;
 }

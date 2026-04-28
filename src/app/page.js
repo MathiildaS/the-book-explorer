@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-6"
+      className="min-h-screen flex justify-center pt-24 px-6"
       style={{ background: "var(--background)" }}
     >
       <main className="w-full max-w-[700px]">
@@ -41,9 +41,15 @@ export default async function Home() {
               maxWidth: "520px",
             }}
           >
-            Search for books, explore authors, browse categories 
-            and discover what others are reading.
+            Search for books, explore authors, browse categories and discover
+            what others are reading.
           </p>
+
+          <div className="mt-10">
+            <a href="/api/githubAuth" className="clear-button">
+              Login with GitHub
+            </a>
+          </div>
         </section>
       </main>
     </div>
