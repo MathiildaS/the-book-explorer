@@ -17,7 +17,7 @@ export default function BookObject({ book }) {
         boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
       }}
     >
-      <h3 className="mb-2">{title}</h3>
+      <h4 className="mb-2">{title}</h4>
       <p
         className="mb-4 text-sm"
         style={{
