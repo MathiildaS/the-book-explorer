@@ -1,7 +1,7 @@
 import { getBooks } from "../../dashboardData/books.js";
 import { getTopAuthors } from "../../dashboardData/authorToplist.js";
 import { redirect } from "next/navigation";
-import TopAuthorChart from "../../clientComponents/toplistChart.js";
+import ToplistChart from "../../clientComponents/toplistChart.js";
 import Link from "next/link.js";
 import FilteringForm from "../../clientComponents/filteringForm.js";
 import { getFiltering } from "../../dashboardData/bookFilter.js";
@@ -9,12 +9,11 @@ import BookObject from "../../clientComponents/bookList.js";
 import { getPagination } from "../../dashboardData/booksPagination.js";
 import { getAllCategories } from "../../dashboardData/bookCategories.js";
 import { getBooksOfAuthor } from "../../dashboardData/authorBooks.js";
-import AuthorBooksList from "../../clientComponents/authorBookList.js";
 import { getAuthorBooksPagination } from "../../dashboardData/authorBooksPagination.js";
 import { getTopCategories } from "../../dashboardData/categoriesToplist.js";
 import { getBooksInCategory } from "../../dashboardData/categoryBooks.js";
 import { getCategoryBooksPagination } from "../../dashboardData/categoryBooksPagination.js";
-import CategoryBooksList from "../../clientComponents/categoryBookList.js";
+import ChartBookList from "../../clientComponents/chartBookList.js";
 
 /**
  *
@@ -128,6 +127,14 @@ export default async function Dashboard({ searchParams }) {
     };
   }
 
+  const selectedAuthor = authors.find(
+    (author) => String(author.id) === String(authorId),
+  );
+
+  const selectedCategory = topCategories.find(
+    (category) => String(category.id) === String(categoryId),
+  );
+
   const { prevPage, nextPage } = getPagination(pageInfo, formFilter);
 
   return (
@@ -136,7 +143,7 @@ export default async function Dashboard({ searchParams }) {
         <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
           <h1 className="text-2xl font-bold">Books</h1>
 
-          <FilteringForm filter={formFilter} categories={topCategories} />
+          <FilteringForm filter={formFilter} categories={categories} />
 
           <p className="mt-4 text-sm text-zinc-500">
             Showing {books.length} books
@@ -164,17 +171,16 @@ export default async function Dashboard({ searchParams }) {
               Top 10 Authors and Categories
             </h2>
             <div className="mt-4">
-              <TopAuthorChart authors={authors} categories={categories} />
+              <ToplistChart authors={authors} categories={topCategories} />
             </div>
           </section>
 
           {authorId && (
             <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-              <h2 className="text-lg font-semibold">
-                Books by selected author
-              </h2>
-
-              <AuthorBooksList books={authorData.books} />
+              <ChartBookList
+                books={authorData.books}
+                title={`Books by ${selectedAuthor ? selectedAuthor.name : "selected author"}`}
+              />
 
               {authorData.pageInfo && (
                 <div className="mt-6 flex justify-between">
@@ -196,11 +202,10 @@ export default async function Dashboard({ searchParams }) {
 
           {categoryId && (
             <section className="rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-              <h2 className="text-lg font-semibold">
-                Books in selected category
-              </h2>
-
-              <CategoryBooksList books={categoryData.books} />
+              <ChartBookList
+                books={categoryData.books}
+                title={`Books in ${selectedCategory ? selectedCategory.name : "selected category"}`}
+              />
 
               {categoryData.pageInfo && (
                 <div className="mt-6 flex justify-between">
