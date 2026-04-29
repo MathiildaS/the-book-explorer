@@ -38,7 +38,6 @@ async function getAuthUser(githubCode) {
   const githubUserData = await fetchUserData(githubAccessToken);
    console.log("3. Fetching API user")
    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
-console.log("GitHub user details:", githubUserDetails)
   const apiUser = await fetchAPIUser(githubUserData);
   console.log("4. Setting cookie")
   await setUserCookie(apiUser);
@@ -112,6 +111,7 @@ async function fetchUserData(githubAccessToken) {
   const githubName = githubUserData.name;
 
   const githubUserDetails = { githubEmail, githubName };
+  console.log("GitHub user details:", githubUserDetails)
 
   return githubUserDetails;
 }
