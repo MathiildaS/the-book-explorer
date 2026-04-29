@@ -123,6 +123,7 @@ async function fetchUserData(githubAccessToken) {
  * @returns {object} the user data from the API.
  */
 async function fetchAPIUser(githubUserDetails) {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
   const apiUser = await fetch(process.env.NEXT_PUBLIC_API_URL, {
     method: "POST",
     headers: {
@@ -147,6 +148,8 @@ async function fetchAPIUser(githubUserDetails) {
       },
     }),
   });
+
+      console.log("API status:", apiUser.status)
 
   const apiUserData = await apiUser.json();
   console.log("API status:", apiUser.status)
