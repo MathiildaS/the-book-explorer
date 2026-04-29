@@ -32,9 +32,13 @@ export async function GET(req) {
  * @returns {object} the access token with user data or error message.
  */
 async function getAuthUser(githubCode) {
+  console.log("1. Fetching GitHub access token")
   const githubAccessToken = await fetchAccessToken(githubCode);
+  console.log("2. Fetching GitHub user data")
   const githubUserData = await fetchUserData(githubAccessToken);
+   console.log("3. Fetching API user")
   const apiUser = await fetchAPIUser(githubUserData);
+  console.log("4. Setting cookie")
   await setUserCookie(apiUser);
 }
 
