@@ -19,7 +19,7 @@ export async function GET(req) {
     }
 
     await getAuthUser(githubCode);
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/dashboard", process.env.APP_URL));
   } catch (error) {
     return errorHandling(req, error.message);
   }
@@ -160,7 +160,7 @@ async function fetchAPIUser(githubUserDetails) {
  * @param {string} message - the error message.
  */
 function errorHandling(req, message) {
-  const url = new URL("/error", req.url);
+  const url = new URL("/error", process.env.APP_URL);
   url.searchParams.set("message", message);
   return NextResponse.redirect(url);
 }
