@@ -149,8 +149,10 @@ async function fetchAPIUser(githubUserDetails) {
   });
 
   const apiUserData = await apiUser.json();
+  console.log("API status:", apiUser.status)
+console.log("API response:", JSON.stringify(apiUserData, null, 2))
 
-  if (!apiUserData) {
+  if (apiUserData.errors) {
     const error = new Error("Failed to retrieve user data from API");
     console.error("GraphQL fetch failed:", error)
     error.status = 500;
