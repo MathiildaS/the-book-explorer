@@ -37,6 +37,8 @@ async function getAuthUser(githubCode) {
   console.log("2. Fetching GitHub user data")
   const githubUserData = await fetchUserData(githubAccessToken);
    console.log("3. Fetching API user")
+   console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
+console.log("GitHub user details:", githubUserDetails)
   const apiUser = await fetchAPIUser(githubUserData);
   console.log("4. Setting cookie")
   await setUserCookie(apiUser);
@@ -150,6 +152,7 @@ async function fetchAPIUser(githubUserDetails) {
 
   if (!apiUserData) {
     const error = new Error("Failed to retrieve user data from API");
+    console.error("GraphQL fetch failed:", error)
     error.status = 500;
     throw error;
   }
