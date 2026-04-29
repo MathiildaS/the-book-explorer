@@ -124,7 +124,9 @@ async function fetchUserData(githubAccessToken) {
  */
 async function fetchAPIUser(githubUserDetails) {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
-  const apiUser = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+
+    const apiUrl = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+  const apiUser = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
