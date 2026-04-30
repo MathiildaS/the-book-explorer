@@ -4,6 +4,10 @@ export async function getTopCategories(limit) {
   try {
     const jwtToken = await getCookie();
 
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
     const getCategories = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {
@@ -28,7 +32,11 @@ export async function getTopCategories(limit) {
 
     const categoriesData = await getCategories.json();
 
-    if (!categoriesData || !categoriesData.data || !categoriesData.data.categoryToplist) {
+    if (
+      !categoriesData ||
+      !categoriesData.data ||
+      !categoriesData.data.categoryToplist
+    ) {
       throw new Error("Failed to retrieve toplist of categories");
     }
 

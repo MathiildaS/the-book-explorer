@@ -8,7 +8,12 @@ export async function getBooks(numberOfBooks, bookIndex, filter) {
   try {
     const jwtToken = await getCookie();
 
-    const API_URL = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
+    const API_URL =
+      process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
 
     const allBooks = await fetch(API_URL, {
       method: "POST",

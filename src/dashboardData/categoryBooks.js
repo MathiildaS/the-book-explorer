@@ -5,6 +5,10 @@ export async function getBooksInCategory(categoryBookPageData) {
     const { categoryId, numberOfBooks, bookIndex } = categoryBookPageData;
     const jwtToken = await getCookie();
 
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
     const getCategoryBooks = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {

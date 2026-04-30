@@ -4,6 +4,10 @@ export async function getTopAuthors(limit) {
   try {
     const jwtToken = await getCookie();
 
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
     const getAuthors = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {

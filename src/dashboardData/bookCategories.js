@@ -4,6 +4,10 @@ export async function getAllCategories() {
   try {
     const jwtToken = await getCookie();
 
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
     const getCategories = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {

@@ -5,6 +5,10 @@ export async function getBooksOfAuthor(authorBookPageData) {
     const { authorId, numberOfBooks, bookIndex } = authorBookPageData;
     const jwtToken = await getCookie();
 
+    if (!jwtToken) {
+      return { authError: true };
+    }
+
     const getAuthorBooks = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {
