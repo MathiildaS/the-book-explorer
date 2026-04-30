@@ -48,10 +48,10 @@ async function setUserCookie(apiUser) {
 
   cookieStorage.set("jwt-token", apiUser.data.githubLogin.token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    maxAge: 60 * 60 * 2 // 2 hours
   });
 }
 
