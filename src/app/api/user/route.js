@@ -14,7 +14,7 @@ export async function POST(req) {
     const message = "Could not log out user, please try again.";
     return errorHandling(req, message);
   }
-  return NextResponse.redirect(new URL("/", req.url));
+  return NextResponse.redirect(new URL("/", process.env.APP_URL));
 }
 
 export async function GET(req) {
@@ -23,7 +23,7 @@ export async function GET(req) {
     return NextResponse.redirect(
       new URL(
         "/error?message=Your session has expired. Please log in again.",
-        req.url,
+        process.env.APP_URL,
       ),
     );
   } catch (error) {
@@ -47,7 +47,7 @@ async function emptyCookie() {
  * @param {string} message - the error message.
  */
 function errorHandling(req, message) {
-  const url = new URL("/error", req.url);
+  const url = new URL("/error", process.env.APP_URL);
   url.searchParams.set("message", message);
   return NextResponse.redirect(url);
 }
