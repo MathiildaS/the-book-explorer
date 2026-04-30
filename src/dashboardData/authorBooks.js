@@ -9,7 +9,10 @@ export async function getBooksOfAuthor(authorBookPageData) {
       return { authError: true };
     }
 
-    const getAuthorBooks = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+    const API_URL =
+      process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+
+    const getAuthorBooks = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,14 +66,6 @@ export async function getBooksOfAuthor(authorBookPageData) {
     const authorBooksData = await getAuthorBooks.json();
 
     if (
-      !authorBooksData ||
-      !authorBooksData.data ||
-      !authorBooksData.data.books
-    ) {
-      throw new Error("Failed to retrieve books of author");
-    }
-
-    if (
       getAuthorBooks.status === 401 ||
       authorBooksData.errors?.[0]?.message === "Unauthorized"
     ) {
@@ -79,6 +74,14 @@ export async function getBooksOfAuthor(authorBookPageData) {
       };
 
       return authError;
+    }
+
+    if (
+      !authorBooksData ||
+      !authorBooksData.data ||
+      !authorBooksData.data.books
+    ) {
+      throw new Error("Failed to retrieve books of author");
     }
 
     const authorBooksObject = {

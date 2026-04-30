@@ -8,7 +8,10 @@ export async function getTopCategories(limit) {
       return { authError: true };
     }
 
-    const getCategories = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+    const API_URL =
+      process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+
+    const getCategories = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,14 +36,6 @@ export async function getTopCategories(limit) {
     const categoriesData = await getCategories.json();
 
     if (
-      !categoriesData ||
-      !categoriesData.data ||
-      !categoriesData.data.categoryToplist
-    ) {
-      throw new Error("Failed to retrieve toplist of categories");
-    }
-
-    if (
       getCategories.status === 401 ||
       categoriesData.errors?.[0]?.message === "Unauthorized"
     ) {
@@ -49,6 +44,14 @@ export async function getTopCategories(limit) {
       };
 
       return authError;
+    }
+
+    if (
+      !categoriesData ||
+      !categoriesData.data ||
+      !categoriesData.data.categoryToplist
+    ) {
+      throw new Error("Failed to retrieve toplist of categories");
     }
 
     const categoriesObject = {

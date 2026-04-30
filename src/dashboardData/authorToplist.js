@@ -8,7 +8,10 @@ export async function getTopAuthors(limit) {
       return { authError: true };
     }
 
-    const getAuthors = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+    const API_URL =
+      process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+
+    const getAuthors = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,10 +35,6 @@ export async function getTopAuthors(limit) {
 
     const authorsData = await getAuthors.json();
 
-    if (!authorsData || !authorsData.data || !authorsData.data.authorToplist) {
-      throw new Error("Failed to retrieve toplist of authors");
-    }
-
     if (
       getAuthors.status === 401 ||
       authorsData.errors?.[0]?.message === "Unauthorized"
@@ -45,6 +44,10 @@ export async function getTopAuthors(limit) {
       };
 
       return authError;
+    }
+
+    if (!authorsData || !authorsData.data || !authorsData.data.authorToplist) {
+      throw new Error("Failed to retrieve toplist of authors");
     }
 
     const authorsObject = {

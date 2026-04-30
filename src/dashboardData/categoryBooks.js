@@ -9,7 +9,10 @@ export async function getBooksInCategory(categoryBookPageData) {
       return { authError: true };
     }
 
-    const getCategoryBooks = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+    const API_URL =
+      process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+
+    const getCategoryBooks = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,14 +66,6 @@ export async function getBooksInCategory(categoryBookPageData) {
     const categoryBooksData = await getCategoryBooks.json();
 
     if (
-      !categoryBooksData ||
-      !categoryBooksData.data ||
-      !categoryBooksData.data.books
-    ) {
-      throw new Error("Failed to retrieve books within category");
-    }
-
-    if (
       getCategoryBooks.status === 401 ||
       categoryBooksData.errors?.[0]?.message === "Unauthorized"
     ) {
@@ -79,6 +74,14 @@ export async function getBooksInCategory(categoryBookPageData) {
       };
 
       return authError;
+    }
+
+    if (
+      !categoryBooksData ||
+      !categoryBooksData.data ||
+      !categoryBooksData.data.books
+    ) {
+      throw new Error("Failed to retrieve books within category");
     }
 
     const categoryBooksObject = {

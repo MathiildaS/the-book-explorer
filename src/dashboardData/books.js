@@ -81,15 +81,6 @@ export async function getBooks(numberOfBooks, bookIndex, filter) {
 
     const allBooksData = await allBooks.json();
 
-    if (allBooksData.errors) {
-      console.log("GraphQL errors:", allBooksData.errors);
-
-      return {
-        authError: false,
-        fetchError: true,
-      };
-    }
-
     if (
       allBooks.status === 401 ||
       allBooksData.errors?.[0]?.message === "Unauthorized"
@@ -99,6 +90,15 @@ export async function getBooks(numberOfBooks, bookIndex, filter) {
       };
 
       return authError;
+    }
+
+    if (allBooksData.errors) {
+      console.log("GraphQL errors:", allBooksData.errors);
+
+      return {
+        authError: false,
+        fetchError: true,
+      };
     }
 
     if (!allBooksData) {
