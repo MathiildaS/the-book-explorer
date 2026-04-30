@@ -8,11 +8,11 @@ The application is deployed at: https://cu3236.camp.lnu.se
 
 ## Tech Stack
 
-- Next.js: A React framework for building server-rendered applications.
-- React: A JavaScript library for building user interfaces.
-- Chart.js: A JavaScript library for creating interactive charts.
-- Tailwind CSS: A utility-first CSS framework for styling the application.
-- GitHub OAuth: Used for authentication to access the book-graphql-api.
+- Next.js: A React framework for building server-rendered applications. Chosen for its built-in support for server-side rendering, API routes and seamless integration with React.
+- React: A JavaScript library for building user interfaces. Used for creating reusable UI components and managing the application state.
+- Chart.js: A JavaScript library for creating interactive charts. Used to visualize the top authors and categories in the dashboard.
+- Tailwind CSS: A utility-first CSS framework for styling the application. Chosen for its flexibility and ease of use in creating responsive designs.
+- GitHub OAuth: Used for authentication to access the book-graphql-api. Chosen for its simplicity and wide adoption, allowing users to log in with their existing GitHub accounts without needing to create a new account specifically for this application.
 
 ## Features
 
