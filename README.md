@@ -62,6 +62,19 @@ On the dashboard, users can:
    npm run dev
    ```
 
+## Printscreens of the application
+### Login page
+![Login page](/public/frontpage.png)
+
+### Dashboard with filters and pagination
+![Dashboard with filters and pagination](/public/dashboard.png)
+
+### Top authors chart
+![Top authors chart](/public/top-chart.png)
+
+### Books within category from chart with details on hover
+![Books within category](/public/books-in-category.png)
+
 ## Design Decisions
 
 ### Data Fetching
