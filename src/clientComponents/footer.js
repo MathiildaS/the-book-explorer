@@ -15,10 +15,15 @@ export default function Footer() {
       className="w-full flex items-center justify-center"
       style={{
         background: "#3D2B1F",
-        height: "80px",
+        height: "100px",
       }}
     >
-      <p style={{ color: "#F5EFE6" }}>Created as part of a course at Linnaeus University - WT Assignment - Created by Mathilda Segerlund</p>
+      <p style={{ color: "#F5EFE6" }}>
+        Created as part of a course at Linnaeus University - WT Assignment
+        <br />
+        Created by Mathilda Segerlund |{" "}
+        <a href="mailto:ms228qs@student.lnu.se">ms228qs@student.lnu.se</a>
+      </p>
     </footer>
   );
 }
