@@ -1,3 +1,8 @@
+/**
+ * @file Creates the dashboard page component to display a list of books, the chart with top authors and top categories, along with filtering options and pagination for the books.
+ * @module app/dashboard/page.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
 import { getBooks } from "../../dashboardData/books.js";
 import { getTopAuthors } from "../../dashboardData/authorToplist.js";
 import { redirect } from "next/navigation";
@@ -16,8 +21,9 @@ import ChartBookList from "../../clientComponents/chartBookList.js";
 import PaginationLinks from "../../clientComponents/paginationLinks.js";
 
 /**
+ * Component to display the dashboard page with filtering form, list of books, top authors and categories charts and with pagination.
  *
- * @returns
+ * @returns {JSX.Element} The dashboard page component.
  */
 export default async function Dashboard({ searchParams }) {
   const searchParameters = await searchParams;

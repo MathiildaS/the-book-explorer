@@ -1,3 +1,10 @@
+/**
+ * @file Handles the callback from GitHub after authentication. Exchanges the code from GitHub for an access token,
+ * then uses the access token to fetch user data from GitHub and then fetches user data from the API before setting a cookie with the JWT token from the API.
+ * @module app/api/githubAuth/callback/route.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -32,17 +39,17 @@ export async function GET(req) {
  * @returns {object} the access token with user data or error message.
  */
 async function getAuthUser(githubCode) {
-  console.log("1. Fetching GitHub access token")
   const githubAccessToken = await fetchAccessToken(githubCode);
-  console.log("2. Fetching GitHub user data")
   const githubUserData = await fetchUserData(githubAccessToken);
-   console.log("3. Fetching API user")
-   console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
   const apiUser = await fetchAPIUser(githubUserData);
-  console.log("4. Setting cookie")
   await setUserCookie(apiUser);
 }
 
+/**
+ * Sets the JWT token in a cookie named jwt-token.
+ *
+ * @param {object} apiUser - the API response including the JWT token.
+ */
 async function setUserCookie(apiUser) {
   const cookieStorage = await cookies();
 
@@ -51,7 +58,7 @@ async function setUserCookie(apiUser) {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: 60 * 60 * 2 // 2 hours
+    maxAge: 60 * 60 * 2, // 2 hours
   });
 }
 
@@ -111,7 +118,6 @@ async function fetchUserData(githubAccessToken) {
   const githubName = githubUserData.name;
 
   const githubUserDetails = { githubEmail, githubName };
-  console.log("GitHub user details:", githubUserDetails)
 
   return githubUserDetails;
 }
@@ -123,9 +129,8 @@ async function fetchUserData(githubAccessToken) {
  * @returns {object} the user data from the API.
  */
 async function fetchAPIUser(githubUserDetails) {
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL)
-
-    const apiUrl = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl =
+    process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
   const apiUser = await fetch(apiUrl, {
     method: "POST",
     headers: {
@@ -151,15 +156,12 @@ async function fetchAPIUser(githubUserDetails) {
     }),
   });
 
-      console.log("API status:", apiUser.status)
 
   const apiUserData = await apiUser.json();
-  console.log("API status:", apiUser.status)
-console.log("API response:", JSON.stringify(apiUserData, null, 2))
 
   if (apiUserData.errors) {
     const error = new Error("Failed to retrieve user data from API");
-    console.error("GraphQL fetch failed:", error)
+    console.error("GraphQL fetch failed:", error);
     error.status = 500;
     throw error;
   }

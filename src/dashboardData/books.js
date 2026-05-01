@@ -1,8 +1,18 @@
-import { getCookie } from "./jwtCookie.js";
+/**
+ * @file Handles the fetching of books with filters.
+ * @module dashboardData/books.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
+import { getCookie } from "./jwtCookie";
 
 /**
+ * Fetches books based on the provided page data and filters.
  *
- * @returns
+ * @param {number} numberOfBooks - The number of books to fetch per page.
+ * @param {number} bookIndex - The index of the first book to display.
+ * @param {object} filter - The filters for fetching books.
+ * @returns {object} An object with the fetched books or an error object.
  */
 export async function getBooks(numberOfBooks, bookIndex, filter) {
   try {

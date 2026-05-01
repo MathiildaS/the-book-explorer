@@ -1,5 +1,18 @@
+/**
+ * @file Creates the filtering form component.
+ * @module clientComponents/filteringForm.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import Link from "next/link";
 
+/**
+ * Creates a form component for filtering books based on title, author, category and publisher with amount of books to display-option
+ * 
+ * @param {object} filter - props containing the current filter values for book title, author name and publisher name with selection of category and limit.
+ * @param {object} categories - props containing the list of categories.
+ * @returns {JSX.Element} The form component with input fields for filtering books and a clear button to reset the filters.
+ */
 export default function FilteringForm({ filter, categories }) {
   const { bookTitle, authorName, categoryName, publisherName, limit } = filter;
 

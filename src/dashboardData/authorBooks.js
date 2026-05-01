@@ -1,5 +1,17 @@
+/**
+ * @file Handles the fetching of books written by a specific author.
+ * @module dashboardData/authorBooks.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { getCookie } from "./jwtCookie";
 
+/**
+ * Fetches books written by a specific author based on the provided page data.
+ *
+ * @param {object} authorBookPageData - Data containing author ID and pagination information.
+ * @returns {object} An object with the fetched books or an error object.
+ */
 export async function getBooksOfAuthor(authorBookPageData) {
   try {
     const { authorId, numberOfBooks, bookIndex } = authorBookPageData;

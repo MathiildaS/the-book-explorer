@@ -1,3 +1,15 @@
+/**
+ * @file Creates and displays the metadata for a book in the book list.
+ * @module clientComponents/bookList.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
+/**
+ * Component to display the metadata for a single book in the book list.
+ * The description is hidden by default and is revealed on hover.
+ * 
+ * @returns {JSX.Element} The book object component displaying the title, authors, publisher, publish date, categories and description of the book. 
+ */
 export default function BookObject({ book }) {
   const {
     title,

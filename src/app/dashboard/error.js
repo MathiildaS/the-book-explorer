@@ -1,6 +1,17 @@
+/**
+ * @file Creates an custom error page component to display an error message when errors occurs within the dashboard page.
+ * @module app/dashboard/error.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 "use client";
 import Link from "next/link";
 
+/**
+ * Component to display the error page with an error message and link to navigate back home or retry loading the dashboard page.
+ *
+ * @returns {JSX.Element} The error page component.
+ */
 export default function Error({ error, reset }) {
   return (
     <div
@@ -26,7 +37,7 @@ export default function Error({ error, reset }) {
           </p>
 
           <div className="mt-10 flex justify-center gap-4">
-            <button onClick={() => unstable_retry()}>Try again</button>
+            <button onClick={() => reset()}>Try again</button>
             <Link href="/" className="clear-button">
               Go back to Home Page
             </Link>

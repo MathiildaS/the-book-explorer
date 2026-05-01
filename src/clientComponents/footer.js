@@ -1,6 +1,13 @@
 /**
+ * @file Creates the footer component.
+ * @module clientComponents/footer.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
+/**
  * Component to display the footer on all pages of the app.
- * @returns The footer component.
+ *
+ * @returns {JSX.Element} The footer component.
  */
 export default function Footer() {
   return (
@@ -11,7 +18,7 @@ export default function Footer() {
         height: "80px",
       }}
     >
-      <p style={{ color: "#F5EFE6" }}>WT Assignment</p>
+      <p style={{ color: "#F5EFE6" }}>Created as part of a course at Linnaeus University - WT Assignment - Created by Mathilda Segerlund</p>
     </footer>
   );
 }

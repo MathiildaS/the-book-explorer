@@ -1,3 +1,9 @@
+/**
+ * @file Creates the chart component displaying top authors or categories.
+ * @module clientComponents/toplistChart.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -23,6 +29,13 @@ ChartJS.register(
   Legend,
 );
 
+/**
+ * Creates the chart component displaying top authors or categories.
+ * Toggles between displaying top authors and categories based on user selection and allows users to click on bars in the chart to filter books by the selected author or category.
+ * 
+ * @param {object} authors|categories - props containing the data of the top authors and categories to be displayed in the chart.
+ * @returns {JSX.Element} An interactive bar chart component.
+ */
 export default function ToplistChart({ authors, categories }) {
   const router = useRouter();
   const searchParameters = useSearchParams();

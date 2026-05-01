@@ -1,5 +1,16 @@
+/**
+ * @file Handles the fetching of all categories.
+ * @module dashboardData/bookCategories.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { getCookie } from "./jwtCookie";
 
+/**
+ * Fetches all categories.
+ *
+ * @returns {object} An object with the fetched categories or an error object.
+ */
 export async function getAllCategories() {
   try {
     const jwtToken = await getCookie();

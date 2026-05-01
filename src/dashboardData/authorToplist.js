@@ -1,5 +1,17 @@
+/**
+ * @file Handles the fetching of the top authors based on number of books written.
+ * @module dashboardData/authorToplist.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { getCookie } from "./jwtCookie";
 
+/**
+ * Fetches the top authors based on the number of books written.
+ *
+ * @param {number} limit - The number of top authors to fetch.
+ * @returns {object} An object with the fetched authors or an error object.
+ */
 export async function getTopAuthors(limit) {
   try {
     const jwtToken = await getCookie();

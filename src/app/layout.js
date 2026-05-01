@@ -1,3 +1,8 @@
+/**
+ * @file Creates the root layout for the application, including global styles and fonts, and defines the structure of the page with a header, main content area, and footer.
+ * @module app/layout.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
 import { Lato, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "../clientComponents/header.js";
@@ -20,6 +25,12 @@ export const metadata = {
   description: "Dashboard for the WT Assignment",
 };
 
+
+/**
+ * Component to display the root layout for the application, including global styles and fonts, and defines the structure of the page with a header, main content area, and footer.
+ *
+ * @returns {JSX.Element} The root layout component.
+ */
 export default function RootLayout({ children }) {
   return (
     <html

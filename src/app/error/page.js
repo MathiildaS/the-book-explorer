@@ -1,5 +1,15 @@
+/**
+ * @file Creates the error page component to display an error message when an unexpected error occurs, along with a link to navigate back to the home page.
+ * @module app/error/page.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
 import Link from "next/link";
 
+/**
+ * Component to display the error page with an error message and a link to navigate back to the home page.
+ *
+ * @returns {JSX.Element} The error page component.
+ */
 export default async function Errors({ searchParams }) {
   const searchParamsValue = await searchParams;
   const errorMessage =

@@ -1,5 +1,17 @@
+/**
+ * @file Handles the fetching of books in a category.
+ * @module dashboardData/categoryBooks.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { getCookie } from "./jwtCookie";
 
+/**
+ * Fetches books in a specific category based on the provided page data.
+ *
+ * @param {object} categoryBookPageData - Data containing category ID and pagination information.
+ * @returns {object} An object with the fetched books or an error object.
+ */
 export async function getBooksInCategory(categoryBookPageData) {
   try {
     const { categoryId, numberOfBooks, bookIndex } = categoryBookPageData;

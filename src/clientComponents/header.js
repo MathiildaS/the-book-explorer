@@ -1,10 +1,17 @@
+/**
+ * @file Creates the header component displaying the app title, images and logout navigation link.
+ * @module clientComponents/header.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { cookies } from "next/headers";
 import Button from "./button.js";
 import Image from "next/image";
 
 /**
  * Component to display the header on all pages of the app.
- * @returns The header component.
+ *
+ * @returns {JSX.Element} The header component with navigation link and images.
  */
 export default async function Header() {
   const cookieStorage = await cookies();

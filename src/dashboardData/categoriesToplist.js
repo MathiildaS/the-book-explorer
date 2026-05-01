@@ -1,5 +1,17 @@
+/**
+ * @file Handles the fetching of the top categories based on number of books written.
+ * @module dashboardData/categoriesToplist.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
+
 import { getCookie } from "./jwtCookie";
 
+/**
+ * Fetches the top categories based on the number of books written.
+ *
+ * @param {number} limit - The number of top categories to fetch.
+ * @returns {object} An object with the fetched categories or an error object.
+ */
 export async function getTopCategories(limit) {
   try {
     const jwtToken = await getCookie();

@@ -1,6 +1,16 @@
+/**
+ * @file Creates the home page component with a welcome message and a login link for users to authenticate with GitHub.
+ * @module app/page.js
+ * @author Mathilda Segerlund <ms228qs@student.lnu.se>
+ */
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
+/**
+ * Component to display the home page with a welcome message and a login link for users to authenticate with GitHub.
+ *
+ * @returns {JSX.Element} The home page component.
+ */
 export default async function Home() {
   const cookieStorage = await cookies();
   const jwtToken = cookieStorage.get("jwt-token");
